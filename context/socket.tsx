@@ -2,8 +2,13 @@ import { createContext, useContext, useEffect, useState, ReactNode } from 'react
 import { io, type Socket } from 'socket.io-client';
 import type { DefaultEventsMap } from '@socket.io/component-emitter';
 
+interface SocketContextType {
+    socket: Socket<DefaultEventsMap, DefaultEventsMap> | null;
+    error: string | null;
+}
+
 // Create a context for the Socket instance
-const SocketContext = createContext<Socket<DefaultEventsMap, DefaultEventsMap> | null>(null);
+const SocketContext = createContext<SocketContextType | null>(null);
 
 // Hook to use socket context
 const useSocket = () => {
@@ -12,19 +17,22 @@ const useSocket = () => {
 
 const SocketProvider = ({ children }: { children: ReactNode }) => {
     const [socket, setSocket] = useState<Socket<DefaultEventsMap, DefaultEventsMap> | null>(null);
+    const [error, setError] = useState<string | null>(null)
 
     useEffect(() => {
-        const socketConnection = io(); // Add URL if necessary
+        const socketConnection = io(); 
         setSocket(socketConnection);
-
-        // Cleanup function to disconnect the socket when the component unmounts
-        return () => {
-            socketConnection.disconnect();
-        };
     }, []);
 
+    socket?.on('connect_error', async (err)=>{
+        setError(err.message)
+        console.log("Error establishing socket",err.message);
+        await fetch('api/socket')
+        
+    })
+
     return (
-        <SocketContext.Provider value={socket}>
+        <SocketContext.Provider value={{socket, error}}>
             {children}
         </SocketContext.Provider>
     );

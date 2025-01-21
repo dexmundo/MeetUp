@@ -1,6 +1,7 @@
 import { Server } from 'socket.io'
 
-export const SocketHandler = (req: any, res: any) => {
+const SocketHandler = (req: any, res: any) => {
+
     if (res.socket.server.io) {
         console.log("socket already running");
     } else {
@@ -13,4 +14,6 @@ export const SocketHandler = (req: any, res: any) => {
     }
     res.end()
 }
+
+export default SocketHandler
 
