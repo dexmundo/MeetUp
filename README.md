@@ -1,1 +1,1 @@
-## MeetUp (Video chat app) using Next.js and WebRTC
+## MeetUp (Video chat app) using Next.js, Typescript and WebRTC
