@@ -19,7 +19,7 @@ export default function Home() {
 
   return (
     <div className='w-full text-center grid gap-8'>
-      <h1 className='text-2xl bg-blue-500 '>Shashant is gonna build this amazing video calling app called - MeetUp</h1>
+      <h1 className='text-2xl bg-blue-500 '>Shashant is building this amazing video calling app called - MeetUp</h1>
       <div className='flex max-w-lg mx-auto flex-col gap-4 '>
         <input placeholder='Enter Room ID' value={roomId} onChange={(e) => setRoomId(e.target.value)} className='bg-neutral-200 text-neutral-800 placeholder:italic px-4 py-1 w-fit border border-neutral-300 rounded-md' />
         <Button text='Join a Room' onClick={joinRoom} />

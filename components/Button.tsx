@@ -6,12 +6,13 @@ type Props = {
 };
 
 const Button = (props: Props) => {
+    const { onClick, text } = props
     return (
         <button
             className='px-4 py-1 border rounded-lg bg-neutral-700 hover:bg-neutral-800'
-            onClick={props.onClick}
+            onClick={onClick}
         >
-            {props.text}
+            {text}
         </button>
     );
 };
