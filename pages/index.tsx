@@ -14,7 +14,7 @@ export default function Home() {
 
   const joinRoom = () => {
     if (roomId) router.push(`/${roomId}`)
-    alert("Please enter a Room id to join a room")
+    else alert("Please enter a Room id to join a room")
   }
 
   return (

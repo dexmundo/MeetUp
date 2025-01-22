@@ -11,9 +11,9 @@ const Player = (props: Props) => {
 
     const { url, playerId, muted, playing } = props
     return (
-        <>
+        <div className=" p-4">
             <ReactPlayer url={url} key={playerId} muted={muted} playing={playing} />
-        </>
+        </div>
     )
 
 }

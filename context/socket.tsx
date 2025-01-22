@@ -20,19 +20,19 @@ const SocketProvider = ({ children }: { children: ReactNode }) => {
     const [error, setError] = useState<string | null>(null)
 
     useEffect(() => {
-        const socketConnection = io(); 
+        const socketConnection = io();
         setSocket(socketConnection);
     }, []);
 
-    socket?.on('connect_error', async (err)=>{
+    socket?.on('connect_error', async (err) => {
         setError(err.message)
-        console.log("Error establishing socket",err.message);
+        console.log("Error establishing socket", err.message);
         await fetch('api/socket')
-        
+
     })
 
     return (
-        <SocketContext.Provider value={{socket, error}}>
+        <SocketContext.Provider value={{ socket, error }}>
             {children}
         </SocketContext.Provider>
     );

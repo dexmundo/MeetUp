@@ -1,6 +1,7 @@
 import { Server } from 'socket.io'
 
 const SocketHandler = (req: any, res: any) => {
+    console.log("Called Socket API");
 
     if (res.socket.server.io) {
         console.log("socket already running");
@@ -8,8 +9,14 @@ const SocketHandler = (req: any, res: any) => {
         const io = new Server(res.socket.server)
         res.socket.server.io = io
 
-        io.on("connection", () => {
-            console.log("server is connected")
+        io.on("connection", (socket) => {
+            console.log("server is connected");
+
+            socket?.on('join-room', (roomId, userId) => {
+                console.log(`a new user ${userId} joined room - ${roomId}`);
+                socket.join(roomId)
+                socket.broadcast.to(roomId).emit('user-connected', userId)
+            })
         })
     }
     res.end()
