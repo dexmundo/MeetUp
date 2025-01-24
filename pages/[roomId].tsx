@@ -10,11 +10,9 @@ const Room = () => {
   const roomId = useParams()?.roomId
   const socket = useSocket()?.socket
   // const error = useSocket()?.error
-  const { stream } = useMediaStream()
-  const { players, setPlayers } = usePlayer()
-
   const { myId, peer } = usePeer()
-
+  const { stream } = useMediaStream()
+  const { players, setPlayers, highlightedPlayer, nonHighlightedPlayer } = usePlayer(myId)
 
   useEffect(() => {
     if (!socket || !peer || !stream) return;
@@ -80,18 +78,24 @@ const Room = () => {
   }, [stream, myId])
 
 
-  return (
-    <div className="w-full">
-      <h1>This is room - {roomId}</h1>
 
-      {players && Object.keys(players).map((playerId) => {
-        const { url, muted, playing } = players[playerId]
+  console.log(nonHighlightedPlayer);
+
+  const newMemberJoined = (highlightedPlayer && Object.keys(highlightedPlayer).length > 0)
+
+  return (
+    <div className="w-full h-screen flex">
+      {highlightedPlayer && Object.keys(highlightedPlayer).map((playerId) => {
+        const { url, muted, playing } = highlightedPlayer[playerId]
         return (
-          <div key={playerId} className="w-full h-full hover:scale-105 duration-300 flex justify-around">
-            <Player url={url} playerId={playerId} key={playerId} muted={muted} playing={playing} />
+          <div key={playerId} className="w-full h-[95vh] p-6 transition-all duration-1000 ease-in-out">
+            <Player url={url} playerId={playerId} key={playerId} muted={muted} playing={playing} isActive />
           </div>
         )
       })}
+      <div className={`p-6 transition-all duration-1000 ease-in-out  ${newMemberJoined ? 'w-1/4 h-fit my-auto hover:scale-110 duration-300' : 'w-full h-[95vh]'}`}>
+        {nonHighlightedPlayer && (<Player url={nonHighlightedPlayer.url} muted={nonHighlightedPlayer.muted} playerId={"1"} key={1} playing={nonHighlightedPlayer.playing} isActive={newMemberJoined ? false : true} />)}
+      </div>
     </div>)
 
 }
