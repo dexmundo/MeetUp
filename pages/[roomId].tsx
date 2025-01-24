@@ -84,17 +84,17 @@ const Room = () => {
   const newMemberJoined = (highlightedPlayer && Object.keys(highlightedPlayer).length > 0)
 
   return (
-    <div className="w-full h-screen flex">
+    <div className="w-full h-screen flex p-4">
       {highlightedPlayer && Object.keys(highlightedPlayer).map((playerId) => {
         const { url, muted, playing } = highlightedPlayer[playerId]
         return (
-          <div key={playerId} className="w-full h-[95vh] p-6 transition-all duration-1000 ease-in-out">
+          <div key={playerId} className="w-full h-[90vh] transition-all duration-1000 ease-in-out">
             <Player url={url} playerId={playerId} key={playerId} muted={muted} playing={playing} isActive />
           </div>
         )
       })}
-      <div className={`p-6 transition-all duration-1000 ease-in-out  ${newMemberJoined ? 'w-1/4 h-fit my-auto hover:scale-110 duration-300' : 'w-full h-[95vh]'}`}>
-        {nonHighlightedPlayer && (<Player url={nonHighlightedPlayer.url} muted={nonHighlightedPlayer.muted} playerId={"1"} key={1} playing={nonHighlightedPlayer.playing} isActive={newMemberJoined ? false : true} />)}
+      <div className={` transition-all  ease-in-out   ${newMemberJoined ? 'w-1/3  md:w-1/4 lg:w-1/5 xl:w-1/6 h-fit absolute top-20 right-10 hover:scale-110 duration-500' : 'w-full h-[90vh] duration-1000'}`}>
+        {nonHighlightedPlayer && (<Player className={`shadow-xl ${newMemberJoined && " hover:border-[3px] border-blue-500 transition-all duration-500 ease-in-out"}`} url={nonHighlightedPlayer.url} muted={nonHighlightedPlayer.muted} playerId={"1"} key={1} playing={nonHighlightedPlayer.playing} isActive={newMemberJoined ? false : true} />)}
       </div>
     </div>)
 

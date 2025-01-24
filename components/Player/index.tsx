@@ -5,14 +5,15 @@ type Props = {
     playerId: string
     muted: boolean,
     playing: boolean
-    isActive: boolean
+    isActive: boolean,
+    className?: string
 }
 
 const Player = (props: Props) => {
-    const { url, playerId, muted, playing, isActive } = props;
+    const { url, playerId, muted, playing, isActive, className } = props;
 
     return (
-        <div className="w-full h-full overflow-hidden mirror bg-neutral-800 rounded-2xl relative">
+        <div className={`w-full h-full overflow-hidden mirror bg-neutral-800 rounded-2xl relative ${className}`}>
             <div className=" w-full h-full">
                 <ReactPlayer
                     width="100%"
