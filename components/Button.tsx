@@ -9,7 +9,7 @@ const Button = (props: Props) => {
     const { onClick, text } = props
     return (
         <button
-            className='px-4 py-1 border rounded-lg bg-neutral-700 hover:bg-neutral-800'
+            className='px-4 py-1 border border-neutral-500 rounded-lg bg-neutral-700 hover:opacity-75'
             onClick={onClick}
         >
             {text}

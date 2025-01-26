@@ -1,15 +1,17 @@
 import { useState } from "react"
 import { cloneDeep } from 'lodash'
 import { useSocket } from "@/context/socket";
+import { useRouter } from "next/router";
 
 type Player = {
     url: MediaStream;
     muted: boolean;
     playing: boolean;
 };
-const usePlayer = (myId: any, roomId: any) => {
+const usePlayer = (myId: any, roomId: any, peer: any) => {
 
-    const socket = useSocket()
+    const socket = useSocket()?.socket
+    const router = useRouter()
     const [players, setPlayers] = useState<Record<string, Player>>({});
     const playersCopy = cloneDeep(players)
 
@@ -17,6 +19,13 @@ const usePlayer = (myId: any, roomId: any) => {
     delete playersCopy[myId]
 
     const highlightedPlayer = playersCopy
+
+    const leaveRoom = () => {
+        socket?.emit('user-leave', myId, roomId)
+        console.log(`leaving room ${roomId}`);
+        peer?.disconnect()
+        router.push('/')
+    }
 
     const toggleAudio = () => {
         console.log("I toggled my audio");
@@ -27,8 +36,8 @@ const usePlayer = (myId: any, roomId: any) => {
             }
             return { ...copy }
         })
-        if (socket?.socket) {
-            socket.socket.emit('user-toggle-audio', myId, roomId);
+        if (socket) {
+            socket.emit('user-toggle-audio', myId, roomId);
         } else {
             console.warn("Socket is not connected");
         }
@@ -43,15 +52,15 @@ const usePlayer = (myId: any, roomId: any) => {
             }
             return { ...copy }
         })
-        if (socket?.socket) {
-            socket.socket.emit('user-toggle-video', myId, roomId);
+        if (socket) {
+            socket.emit('user-toggle-video', myId, roomId);
         } else {
             console.warn("Socket is not connected");
         }
     }
 
 
-    return { players, setPlayers, highlightedPlayer, nonHighlightedPlayer, toggleAudio, toggleVideo }
+    return { players, setPlayers, highlightedPlayer, nonHighlightedPlayer, toggleAudio, toggleVideo, leaveRoom }
 }
 
 export default usePlayer

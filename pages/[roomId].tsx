@@ -3,10 +3,12 @@ import usePeer from "@/hooks/usePeer";
 import { useParams } from "next/navigation";
 import useMediaStream from "@/hooks/useMediaStream";
 import Player from "@/components/Player";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import usePlayer from "@/hooks/usePlayer";
 import ControlPanel from "@/components/ControlPanel";
 import { cloneDeep } from "lodash";
+import CopyId from "@/components/CopyId";
+import { Toaster } from "@/components/ui/toaster";
 
 const Room = () => {
   const roomId = useParams()?.roomId
@@ -14,7 +16,11 @@ const Room = () => {
   // const error = useSocket()?.error
   const { myId, peer } = usePeer()
   const { stream } = useMediaStream()
-  const { players, setPlayers, highlightedPlayer, nonHighlightedPlayer, toggleAudio, toggleVideo } = usePlayer(myId, roomId)
+  const { players, setPlayers, highlightedPlayer, nonHighlightedPlayer, toggleAudio, toggleVideo, leaveRoom } = usePlayer(myId, roomId, peer)
+
+  const [users, setUsers] = useState<any>([])
+
+
 
   useEffect(() => {
     if (!socket || !peer || !stream) return;
@@ -32,6 +38,11 @@ const Room = () => {
             muted: false,
             playing: true,
           }
+        }))
+
+        setUsers((prev: any) => ({
+          ...prev,
+          [newUser]: call
         }))
       })
     }
@@ -59,6 +70,11 @@ const Room = () => {
             muted: false,
             playing: true,
           }
+        }))
+
+        setUsers((prev: any) => ({
+          ...prev,
+          [callerId]: call
         }))
       })
     })
@@ -103,15 +119,25 @@ const Room = () => {
       })
     }
 
+    const handleLeaveRoom = (userId: any) => {
+      console.log(`User with ${userId} is leaving the room`);
+      users[userId]?.close()
+      const playersCopy = cloneDeep(players)
+      delete playersCopy[userId];
+      setPlayers(playersCopy)
+    }
+
     socket.on("user-toggle-audio", handleToggleAudio)
     socket.on("user-toggle-video", handleToggleVideo)
+    socket.on("user-leave", handleLeaveRoom)
 
 
     return () => {
       socket.off("user-toggle-video", handleToggleVideo)
       socket.off("user-toggle-audio", handleToggleAudio)
+      socket.off("user-leave", handleLeaveRoom)
     }
-  }, [socket, setPlayers])
+  }, [socket, setPlayers, users, players])
 
 
 
@@ -135,7 +161,9 @@ const Room = () => {
         </div>
       </div>
       <div className="h-[10vh] w-full ">
-        <ControlPanel muted={nonHighlightedPlayer?.muted} playing={nonHighlightedPlayer?.playing} toggleAudio={toggleAudio} toggleVideo={toggleVideo} />
+        <CopyId roomId={roomId} />
+        <ControlPanel muted={nonHighlightedPlayer?.muted} playing={nonHighlightedPlayer?.playing} toggleAudio={toggleAudio} toggleVideo={toggleVideo} leaveRoom={leaveRoom} />
+        <Toaster />
       </div>
     </div>)
 
