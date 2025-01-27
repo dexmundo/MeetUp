@@ -1,13 +1,16 @@
+import { NextApiRequest, NextApiResponse } from 'next';
 import { Server } from 'socket.io'
 
-const SocketHandler = (req: any, res: any) => {
+type CustomResponse = NextApiResponse & { socket: { server: any } };
+
+const SocketHandler = (req: NextApiRequest, res: CustomResponse) => {
     console.log("Called Socket API");
 
-    if (res.socket.server.io) {
+    if (res.socket?.server?.io) {
         console.log("socket already running");
     } else {
-        const io = new Server(res.socket.server)
-        res.socket.server.io = io
+        const io = new Server(res.socket?.server)
+        res.socket!.server!.io = io
 
         io.on("connection", (socket) => {
             console.log("server is connected");

@@ -52,7 +52,7 @@ const Room = () => {
     return () => {
       socket?.off("user-connected", handleUserConnected)
     }
-  }, [socket, peer, stream])
+  }, [socket, peer, stream, setPlayers])
 
   useEffect(() => {
     if (!peer || !stream) return;
@@ -79,7 +79,7 @@ const Room = () => {
       })
     })
 
-  }, [peer, stream])
+  }, [peer, stream, setPlayers])
 
   useEffect(() => {
     if (!stream || !myId) return
@@ -93,7 +93,7 @@ const Room = () => {
       }
     }))
 
-  }, [stream, myId])
+  }, [stream, myId, setPlayers])
 
   useEffect(() => {
     if (!socket || !setPlayers) return;
@@ -119,7 +119,7 @@ const Room = () => {
       })
     }
 
-    const handleLeaveRoom = (userId: any) => {
+    const handleLeaveRoom = (userId: string) => {
       console.log(`User with ${userId} is leaving the room`);
       users[userId]?.close()
       const playersCopy = cloneDeep(players)

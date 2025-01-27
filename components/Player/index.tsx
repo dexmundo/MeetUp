@@ -1,4 +1,4 @@
-import { CircleUser, CircleUserRound, Mic, MicOff, Video, VideoOff } from "lucide-react";
+import { CircleUserRound, Mic, MicOff, Video, VideoOff } from "lucide-react";
 import ReactPlayer from "react-player"
 
 type Props = {

@@ -1,21 +1,14 @@
 import { v4 as uuidv4 } from 'uuid';
 import { useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import Button from '@/components/Button';
+import { Toaster } from '@/components/ui/toaster';
+import { useToast } from '@/hooks/use-toast';
 
 export default function Home() {
   const router = useRouter();
   const [roomId, setRoomId] = useState('');
-
-  useEffect(() => {
-    return () => {
-      navigator.mediaDevices.getUserMedia({ video: true, audio: true })
-        .then(stream => {
-          stream.getTracks().forEach(track => track.stop());
-        })
-        .catch(err => console.warn("Error stopping media tracks:", err));
-    };
-  }, []);
+  const { toast } = useToast()
 
   const createAndJoinRoom = () => {
     const newRoomId = uuidv4();
@@ -24,12 +17,16 @@ export default function Home() {
 
   const joinRoom = () => {
     if (roomId) router.push(`/${roomId}`);
-    else alert("Please enter a Room ID to join a room");
+    else toast({
+      description: "Please enter a valid Room ID",
+      variant: 'destructive'
+    })
   };
 
   return (
     <div className='w-full h-screen flex flex-col items-center justify-center p-4 text-center bg-neutral-900 text-white'>
-      <h1 className='text-4xl font-bold mb-4'>MeetUp - Connect Instantly</h1>
+      <Toaster />
+      <h1 className='text-4xl font-bold mb-4'><span className='meetup-text text-5xl'>MeetUp</span> - Connect Instantly</h1>
       <p className='text-lg text-neutral-400 mb-6'>No sign-ups, no downloads—just smooth, secure video calls with MeetUp. Stay connected with ease.</p>
       <div className='flex flex-col gap-4 max-w-xs w-full'>
         <input
