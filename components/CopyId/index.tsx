@@ -10,9 +10,9 @@ import { useToast } from '@/hooks/use-toast';
 type Props = {
     roomId: string | string[] | undefined
 }
-const { toast } = useToast()
 
 const CopyId = ({ roomId }: Props) => {
+    const { toast } = useToast()
     if (!roomId || typeof roomId !== 'string') return null;
 
 
