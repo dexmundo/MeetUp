@@ -10,11 +10,11 @@ import { useToast } from '@/hooks/use-toast';
 type Props = {
     roomId: string | string[] | undefined
 }
+const { toast } = useToast()
 
 const CopyId = ({ roomId }: Props) => {
     if (!roomId || typeof roomId !== 'string') return null;
 
-    const { toast } = useToast()
 
     const shortenedId = `${roomId.slice(0, 8)}...`;
 

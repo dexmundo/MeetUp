@@ -9,7 +9,7 @@ import ControlPanel from "@/components/ControlPanel";
 import { cloneDeep } from "lodash";
 import CopyId from "@/components/CopyId";
 import { Toaster } from "@/components/ui/toaster";
-import Peer, { MediaConnection } from "peerjs";
+import { MediaConnection } from "peerjs";
 
 const Room = () => {
   const params = useParams();
@@ -20,8 +20,7 @@ const Room = () => {
   const { stream } = useMediaStream()
   const { players, setPlayers, highlightedPlayer, nonHighlightedPlayer, toggleAudio, toggleVideo, leaveRoom } = usePlayer(myId, roomId, peer)
 
-  const [users, setUsers] = useState<Record<string, any>>({});
-
+  const [users, setUsers] = useState<Record<string, MediaConnection>>({});
 
 
   useEffect(() => {

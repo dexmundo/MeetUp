@@ -1,8 +1,9 @@
 import { CircleUserRound, Mic, MicOff, Video, VideoOff } from "lucide-react";
 import ReactPlayer from "react-player"
+import { SourceProps } from "react-player/base";
 
 type Props = {
-    url: any
+    url: string | MediaStream | string[] | SourceProps[] | undefined
     playerId: string
     muted: boolean,
     playing: boolean

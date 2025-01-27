@@ -4,11 +4,11 @@ import React from 'react'
 import CallEndIcon from '../../public/end-call.svg'
 
 type Props = {
-    muted?: boolean
-    playing?: boolean
-    toggleAudio?: any
-    toggleVideo?: any
-    leaveRoom: any
+    muted: boolean
+    playing: boolean
+    toggleAudio: () => void
+    toggleVideo: () => void
+    leaveRoom: () => void
 }
 
 const ControlPanel = (props: Props) => {
