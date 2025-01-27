@@ -9,22 +9,24 @@ import ControlPanel from "@/components/ControlPanel";
 import { cloneDeep } from "lodash";
 import CopyId from "@/components/CopyId";
 import { Toaster } from "@/components/ui/toaster";
+import Peer, { MediaConnection } from "peerjs";
 
 const Room = () => {
-  const roomId = useParams()?.roomId
+  const params = useParams();
+  const roomId = typeof params?.roomId === "string" ? params.roomId : "";
   const socket = useSocket()?.socket
   // const error = useSocket()?.error
   const { myId, peer } = usePeer()
   const { stream } = useMediaStream()
   const { players, setPlayers, highlightedPlayer, nonHighlightedPlayer, toggleAudio, toggleVideo, leaveRoom } = usePlayer(myId, roomId, peer)
 
-  const [users, setUsers] = useState<any>([])
+  const [users, setUsers] = useState<Record<string, any>>({});
 
 
 
   useEffect(() => {
-    if (!socket || !peer || !stream) return;
-    const handleUserConnected = (newUser: any) => {
+    if (!socket || !peer || !stream || !roomId) return;
+    const handleUserConnected = (newUser: string) => {
       console.log(`new user ${newUser} joined the room - ${roomId}`);
 
       const call = peer.call(newUser, stream)
@@ -40,7 +42,7 @@ const Room = () => {
           }
         }))
 
-        setUsers((prev: any) => ({
+        setUsers((prev) => ({
           ...prev,
           [newUser]: call
         }))
@@ -52,16 +54,16 @@ const Room = () => {
     return () => {
       socket?.off("user-connected", handleUserConnected)
     }
-  }, [socket, peer, stream, setPlayers])
+  }, [socket, peer, stream, setPlayers, roomId])
 
   useEffect(() => {
-    if (!peer || !stream) return;
-    peer.on('call', (call: any) => {
+    if (!peer || !stream || !setPlayers) return;
+    peer.on('call', (call: MediaConnection) => {
 
       const { peer: callerId } = call;
       call.answer(stream)
 
-      call.on('stream', (incomingStream: any) => {
+      call.on('stream', (incomingStream: MediaStream) => {
         console.log(`Incoming stream from ${callerId}`);
         setPlayers((prev) => ({
           ...prev,
@@ -72,7 +74,7 @@ const Room = () => {
           }
         }))
 
-        setUsers((prev: any) => ({
+        setUsers((prev) => ({
           ...prev,
           [callerId]: call
         }))
@@ -98,7 +100,7 @@ const Room = () => {
   useEffect(() => {
     if (!socket || !setPlayers) return;
 
-    const handleToggleAudio = (userId: any) => {
+    const handleToggleAudio = (userId: string) => {
       console.log(`user with id ${userId} toggled audio`);
       setPlayers((prev) => {
         const copy = cloneDeep(prev)
@@ -108,7 +110,7 @@ const Room = () => {
         return { ...copy }
       })
     }
-    const handleToggleVideo = (userId: any) => {
+    const handleToggleVideo = (userId: string) => {
       console.log(`user with id ${userId} toggled video`);
       setPlayers((prev) => {
         const copy = cloneDeep(prev)
