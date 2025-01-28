@@ -63,6 +63,11 @@ To run the project locally on your machine, follow these steps:
    git clone https://github.com/Sad7920/MeetUp
    ```
 
+2. Navigate to the project directory:
+   ```bash
+   cd MeetUp
+   ```
+
 3. Install dependencies:
    ```bash
    npm install
